@@ -1,6 +1,6 @@
 # ------------------------------------Options-----------------------------------
-LXXFLAGS = $(shell pkg-config --libs sdl2)
-CXXFLAGS = -std=c++2a -O2 $(shell pkg-config --cflags sdl2) -Wall -Werror
+LXXFLAGS = $(shell pkg-config --libs sdl2) -lSDL2_ttf
+CXXFLAGS = -std=c++2a -O2 $(shell pkg-config --cflags sdl2) -Wall
 # ------------------------------------Options-----------------------------------
 
 # -------------------------------------Files------------------------------------
@@ -9,10 +9,9 @@ SrcDir  = src
 BinDir = bin
 IntDir = obj
 
-Deps = $(wildcard $(SrcDir)/*.h)\
-       $(wildcard $(TestDir)/*.h)
+Deps = $(wildcard $(SrcDir)/*.h)
 
-CppSrc = $(notdir $(wildcard $(SrcDir)/*.cpp))\
+CppSrc = $(notdir $(wildcard $(SrcDir)/*.cpp))
 
 Objs = $(addprefix $(IntDir)/, $(CppSrc:.cpp=.o))
 # -------------------------------------Files------------------------------------
@@ -22,8 +21,8 @@ Objs = $(addprefix $(IntDir)/, $(CppSrc:.cpp=.o))
 programm: $(BinDir)/a.out  
 
 
-$(BinDir)/a.out: $(IntDir)/main.o $(IntDir)/App.o $(IntDir)/Plot.o $(IntDir)/Vector.o $(IntDir)/CoordSystem.o
-	$(CXX) -o $(BinDir)/a.out $(IntDir)/main.o $(IntDir)/App.o $(IntDir)/Plot.o $(IntDir)/Vector.o $(IntDir)/CoordSystem.o $(LXXFLAGS)
+$(BinDir)/a.out: $(Objs)
+	$(CXX) -o $(BinDir)/a.out $(Objs) $(LXXFLAGS)
 
 vpath %.cpp $(SrcDir) $(TestDir)
 $(IntDir)/%.o: %.cpp $(Deps) Makefile
